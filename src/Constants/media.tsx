@@ -4,12 +4,14 @@ import {
   googleBooksSchemaParser,
   igdbSchemaParser,
 } from "../Helpers/SchemaParsers";
-import { AdditionalRequest, InterpolatableObject } from "../Types/shared";
+import { AdditionalRequest, GoogleBooksParsedData, IGDBParsedData, InterpolatableObject, OMDBParsedData } from "../Types/shared";
 import { LiveTv, Theaters, SportsEsports, MenuBook } from "@material-ui/icons";
 import imdbLogo from "../images/imdb.png";
 import igdbLogo from "../images/igdb.png";
 import googleBooksLogo from "../images/googlebooks.png";
 import { Media } from "../Types/shared";
+import { IGDBGameArr } from "../Types/ApiResponses";
+import { GoogleBooksArr, OMDBMovieArr } from "../Types/ApiResponses";
 export const MOVIE = "movie";
 export const TV_SHOW = "tvShow";
 export const GAME = "game";
@@ -31,7 +33,7 @@ const igdbRequestMetadata = {
   authService: "twitch",
 };
 
-export const media: Media[] = [
+export const media: (Media<OMDBMovieArr, OMDBParsedData> | Media<GoogleBooksArr, GoogleBooksParsedData> | Media<IGDBGameArr, IGDBParsedData>)[] = [
   {
     label: "Movie",
     icon: <Theaters />,

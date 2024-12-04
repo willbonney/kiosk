@@ -69,7 +69,7 @@ export const StyledIconWrapper = styled.div<StyleProps & { children: ReactNode }
           transform: translate(-110px, -110px);
         }`,
     };
-    return quadStyleMap[quadrant.join()];
+    return quadStyleMap[quadrant.join() as keyof typeof quadStyleMap];
   }};
 `;
 

@@ -71,15 +71,15 @@ export type IGDBParsedData = {
   rating: number;
 };
 
-export type Media = {
+export type Media<T extends OMDBMovieArr | GoogleBooksArr | IGDBGameArr, P extends OMDBParsedData | GoogleBooksParsedData | IGDBParsedData> = {
   label: string;
   url: string;
   headers: Headers;
   method: string;
-  data?: any;
-  dataFormatter?: (arg1: string) => string;
+  data?: Record<string, unknown>;
+  dataFormatter?: (input: string) => string;
   searchParam?: string;
-  schemaParser: (arg1: any) => any; // I would love to dynamically type arg1 (and the return value) but it changes depending on which object in the media array (media.tsx) this property is on. Union types don't seem to work here.
+  schemaParser: (response: T) => ParsedData<P>[];
   icon: React.ReactElement;
   firestoreKey: string;
   quadrant: number[];

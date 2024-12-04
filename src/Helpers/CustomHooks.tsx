@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useReducer,
   Reducer,
+  ReactNode,
 } from "react";
 import firebase from "../FirebaseConfig";
 import { User } from "firebase";
@@ -64,7 +65,7 @@ type FirestoreContextMedatata = {
   user?: FirestoreContextUser;
 };
 
-type FirestoreContextSelections = {
+export type FirestoreContextSelections = {
   movie?: ContextMedia;
   tvShow?: ContextMedia;
   game?: ContextMedia;
@@ -94,7 +95,7 @@ export const useAuth = (): UseAuthState => {
     const user = firebase.auth().currentUser;
     return { initializing: !user, user };
   });
-  const onChange = (user) => {
+  const onChange = (user: User | null) => {
     setState({ initializing: false, user });
   };
 
@@ -108,7 +109,7 @@ export const useAuth = (): UseAuthState => {
   return state;
 };
 
-export const FirestoreContextProvider = ({ children }) => {
+export const FirestoreContextProvider = ({ children }: { children: ReactNode }) => {
 
   const [selections, setSelection] = useReducer<Reducer<FirestoreContextSelections, Partial<FirestoreContextSelections>>>((
     state,
