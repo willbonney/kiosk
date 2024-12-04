@@ -1,7 +1,7 @@
 ## Kiosk
 
 <p align="center">
-A live version of this project can be found <a target="blank" rel="noopener noreferrer" href="https://mykiosk.cloud">here</a>.
+A live version of this project can be found <a target="blank" rel="noopener noreferrer" href="majora-563d6.web.app">here</a>.
 </p>
 
 ### `Architecture`
