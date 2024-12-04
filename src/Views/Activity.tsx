@@ -135,14 +135,14 @@ const Activity: React.FC<RouteComponentProps<MatchParams>> = memo(
           <Grid
             className={classes.shareableLinkContainer}
             container
-            justify="center"
+            justifyContent="center"
           >
             <Share className={classes.shareIcon} />
             <ClipBoardCopy />
           </Grid>
         ) : (
           <>
-            <Grid style={{ paddingTop: 15 }} container justify="center">
+            <Grid style={{ paddingTop: 15 }} container justifyContent="center">
               <Avatar
                 style={{ margin: "0 15px" }}
                 alt={publicUser?.email || ""}
@@ -152,7 +152,7 @@ const Activity: React.FC<RouteComponentProps<MatchParams>> = memo(
             </Grid>
           </>
         )}
-        <Grid container justify="space-evenly">
+        <Grid container justifyContent="space-evenly">
           {media.map((m: Media, i: number) => (
             <Grid key={i} item xs={6} style={{ position: "relative" }}>
               <AsyncSelect

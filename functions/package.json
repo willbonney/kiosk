@@ -17,6 +17,12 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": "10"
+    "node": "16.20.2"
+  },
+  "volta": {
+    "node": "16.20.2"
+  },
+  "overrides": {
+    "sharp": "^0.33.5"
   }
 }
