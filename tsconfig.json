@@ -4,6 +4,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "types": [],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
@@ -14,12 +16,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "noImplicitAny": false, // lets turn this on one day!
+    "noImplicitAny": true,
     "noImplicitThis": true,
     "strictNullChecks": true
   },
   "include": ["src"],
   "rules": {
     "jsx-no-lambda": false
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

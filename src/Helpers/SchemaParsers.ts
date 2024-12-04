@@ -21,7 +21,7 @@ export const omdbSchemaParser = (
       Poster: image = "",
       imdbID: id = "",
       Type: type = "",
-      imdbRating = "",
+      imdbRating = "0",
     }) => ({
       label: `${title} (${subtitle})`,
       value: {
@@ -30,7 +30,7 @@ export const omdbSchemaParser = (
         subtitle,
         image,
         type,
-        rating: imdbRating && round(imdbRating, 1),
+        rating: imdbRating ? round(Number(imdbRating), 1) : 0,
       },
     })
   );

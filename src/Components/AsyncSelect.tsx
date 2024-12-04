@@ -159,10 +159,10 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
     };
 
     const augmentWithAdditionalRequest = async ({
-      customBody = {},
+      customBody,
       customUrl,
     }: {
-      customBody?: any;
+      customBody?: string;
       customUrl: string;
     }) => {
       // just a simple extra call to our CORS Cloud Function to get additional data when needed

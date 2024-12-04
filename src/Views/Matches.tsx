@@ -12,6 +12,7 @@ import {
   useSession,
   SelectionContext,
   FirestoreContext,
+  FirestoreContextSelections,
 } from "../Helpers/CustomHooks";
 import firebase from "../FirebaseConfig";
 import { User } from "firebase";
@@ -20,6 +21,17 @@ import isEmpty from "lodash/isEmpty";
 import { useParams } from "react-router-dom";
 import { MatchesParams } from "../Types/shared";
 import { Media } from "../Types/shared";
+
+type MediaMatch = {
+  id: string;
+  email: string;
+  avatar: string;
+  fullName: string;
+}
+
+type MatchesState = {
+  usersThatHaveSelected: Record<string, MediaMatch[]>;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   matchesMediaThumbnail: {
@@ -63,7 +75,8 @@ const Matches: React.FC = (props) => {
   const params = useParams<MatchesParams>();
   const { selections = {} }: FirestoreContext = useContext(SelectionContext);
 
-  const reducer = (state, payload) => ({ ...state, ...payload });
+  const reducer = (state: MatchesState, payload: Partial<MatchesState>): MatchesState => 
+    ({ ...state, ...payload });
   const [state, dispatch] = useReducer(reducer, {
     usersThatHaveSelected: {},
   });
@@ -73,15 +86,16 @@ const Matches: React.FC = (props) => {
       const getSetUsersThatHaveSelected = () => {
         Promise.all(
           media.map((k) => {
-            if (isEmpty(selections[k.firestoreKey])) return false;
+            const key = k.firestoreKey as keyof FirestoreContextSelections;
+            if (isEmpty(selections[key])) return false;
             firebase
               .firestore()
               .collection("media")
-              .doc(selections![k.firestoreKey]?.id)
+              .doc(selections![key]?.id)
               .get()
               .then((doc) => {
                 const stateCopy = state.usersThatHaveSelected;
-                stateCopy[k.firestoreKey] = doc.data()!.currentlySelectedBy;
+                stateCopy[key] = doc.data()!.currentlySelectedBy;
                 return dispatch({
                   usersThatHaveSelected: stateCopy,
                 });
@@ -97,9 +111,9 @@ const Matches: React.FC = (props) => {
     <Grid
       className={classes.matchesWrapper}
       container
-      justify={!isEmpty(params) ? "center" : "space-between"}
+      justifyContent={!isEmpty(params) ? "center" : "space-between"}
     >
-      {media.map((m: Media) => {
+      {media.map((m) => {
         const mediaMatches = state.usersThatHaveSelected[m.firestoreKey];
         return (
           <Grid
@@ -116,11 +130,11 @@ const Matches: React.FC = (props) => {
               <img
                 className={classes.matchesMediaThumbnail}
                 alt=""
-                src={selections[m.firestoreKey]?.value?.image}
+                src={selections[m.firestoreKey as keyof FirestoreContextSelections]?.value?.image}
               />
               <Grid container justify="center" direction="column">
                 {mediaMatches ? (
-                  mediaMatches.map(({ id, email, avatar, fullName }) => {
+                  mediaMatches.map(({ id, email, avatar, fullName }: MediaMatch) => {
                     const displayEmail: string =
                       user?.uid === id ? `${email} (you)` : email;
                     return (

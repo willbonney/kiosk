@@ -110,7 +110,10 @@ interface VolumeInfo {
   previewLink: string;
   infoLink: string;
   canonicalVolumeLink: string;
-  industryIdentifiers: any;
+  industryIdentifiers: {
+    type: string
+    identifier: string
+  }[];
 }
 
 interface ImageLinks {
