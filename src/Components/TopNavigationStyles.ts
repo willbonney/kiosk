@@ -1,12 +1,13 @@
 import styled from "styled-components";
 import Typography from "@material-ui/core/Typography";
+import { ReactNode } from "react";
 
 type StyleProps = {
   secondary?: string;
   primary?: string;
 };
 
-export const StyledAccountButtonWrapper = styled.div`
+export const StyledAccountButtonWrapper = styled.div<StyleProps & { children: ReactNode, onClick: () => void }>`
   position: relative;
   right: 40px;
   grid-row: 2;
@@ -17,7 +18,7 @@ export const StyledAccountButtonWrapper = styled.div`
   }
   justify-self: end;
 `;
-export const StyledLogoutButtonWrapper = styled.div`
+export const StyledLogoutButtonWrapper = styled.div<StyleProps & { children: ReactNode, onClick: () => void }>`
   position: relative;
   grid-row: 2;
   grid-column: 3;
@@ -37,7 +38,7 @@ export const StyledLoggedInUserHeader = styled(Typography)`
   margin: 0;
   color: ${(props: StyleProps) => props.primary};
 `;
-export const StyledTopNavigation = styled.div`
+export const StyledTopNavigation = styled.div<StyleProps & { children: ReactNode }>`
   width: 100%;
   position: fixed;
   top: 0;

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { LinearProgress, Typography } from "@material-ui/core";
+import { ReactNode } from "react";
 
 type StyleProps = {
   // x,y location of section in view
@@ -28,7 +29,7 @@ export const StyledMediaSelectorWrapper = styled.div`
   }
 `;
 
-export const StyledIconWrapper = styled.div`
+export const StyledIconWrapper = styled.div<StyleProps & { children: ReactNode }>`
   & svg {
     position: absolute;
     font-size: 32px;
@@ -109,11 +110,11 @@ export const StlyedActionIcon = styled.div`
   }
 `;
 
-export const StyledTrashIconContainer = styled(StlyedActionIcon)`
+export const StyledTrashIconContainer = styled(StlyedActionIcon)<StyleProps & { children: ReactNode, onClick: () => void }>`
   color: ${({ danger = "" }: StyleProps) => danger};
 `;
 
-export const StyledExternalLinkIconContainer = styled(StlyedActionIcon)`
+export const StyledExternalLinkIconContainer = styled(StlyedActionIcon)<StyleProps & { children: ReactNode}>`
   & > a {
     color: ${({ primary = "" }: StyleProps) => primary};
   }

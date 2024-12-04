@@ -38,7 +38,7 @@ const App: React.FC = () => {
       <Grid
         style={{ height: "100vh" }}
         container
-        justify="center"
+        justifyContent="center"
         alignItems="center"
       >
         <Grid item>
@@ -50,7 +50,7 @@ const App: React.FC = () => {
   return (
     <UserContext.Provider value={{ user }}>
       <FirestoreContextProvider>
-        <Router>
+        <Router basename="/kiosk">
           <Layout>
             <Switch>
               <Route

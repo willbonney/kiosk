@@ -4,9 +4,35 @@ import React, {
   createContext,
   useEffect,
   useReducer,
+  Reducer,
 } from "react";
 import firebase from "../FirebaseConfig";
 import { User } from "firebase";
+
+const MEDIA_INITIAL_STATE = {
+  id: "",
+  label: "",
+  value: {
+    title: "",
+    rating: 0,
+    id: "",
+    type: "",
+    subtitle: "",
+    image: "",
+  },
+};
+
+const SELECTIONS_INITIAL_STATE: FirestoreContextSelections = {
+  movie: { ...MEDIA_INITIAL_STATE },
+  tvShow: { ...MEDIA_INITIAL_STATE },
+  game: { ...MEDIA_INITIAL_STATE },
+  book: { ...MEDIA_INITIAL_STATE },
+};
+
+const METADATA_INITIAL_STATE: FirestoreContextMedatata = {
+  user: {},
+  publicUser: {},
+};
 
 export interface FirestoreContext extends FirestoreContextState {
   setSelection: (arg1: FirestoreContextSelections) => FirestoreContextState;
@@ -83,26 +109,22 @@ export const useAuth = (): UseAuthState => {
 };
 
 export const FirestoreContextProvider = ({ children }) => {
-  const reducer: React.Reducer<
-    FirestoreContextState,
-    FirestoreContextSelections & FirestoreContextMedatata
-  > = (
-    state: FirestoreContextState,
-    payload: FirestoreContextSelections & FirestoreContextMedatata
+
+  const [selections, setSelection] = useReducer<Reducer<FirestoreContextSelections, Partial<FirestoreContextSelections>>>((
+    state,
+    payload
   ) => ({
     ...state,
     ...payload,
-  });
-  const [selections, setSelection] = useReducer<any>(reducer, {
-    movie: {},
-    tvShow: {},
-    game: {},
-    book: {},
-  });
-  const [metadata, setMetadata] = useReducer<any>(reducer, {
-    user: {},
-    publicUser: {},
-  });
+  }), SELECTIONS_INITIAL_STATE);
+
+  const [metadata, setMetadata] = useReducer<Reducer<FirestoreContextMedatata, Partial<FirestoreContextMedatata>>>((
+    state,
+    payload
+  ) => ({
+    ...state,
+    ...payload,
+  }), METADATA_INITIAL_STATE);
 
   return (
     <>
@@ -113,7 +135,7 @@ export const FirestoreContextProvider = ({ children }) => {
             setSelection,
             metadata,
             setMetadata,
-          } as any
+          } as FirestoreContext
         }
       >
         {children}

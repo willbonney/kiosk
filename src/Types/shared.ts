@@ -31,13 +31,13 @@ export type AdditionalRequest = {
   requestMetadata?: Record<string, unknown>;
 };
 
-export type MatchesParams = {
+export interface MatchesParams {
   showOnly?: string;
-};
+}
 
-export type PublicViewParam = {
+export interface PublicViewParam {
   publicUid?: string;
-};
+}
 
 export type ParsedData<T> = {
   label: string;

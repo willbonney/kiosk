@@ -39,13 +39,14 @@ const BottomNav: React.FC<BottomNavProps> = (props: BottomNavProps) => {
   const history = useHistory();
   const user: User = useSession();
 
-  const { params: { publicUid = "", showOnly = "" } = {} } =
-    (useRouteMatch<MatchesParams | PublicViewParam>({
-      // this component isnt part of a route so we need this hook to grab params
-      path: [PUBLIC_ACTIVITY, MATCHES_FILTER],
-      exact: true,
-      strict: true,
-    }) as any) || {};
+  const params = useRouteMatch<MatchesParams | PublicViewParam>({
+    path: [PUBLIC_ACTIVITY, MATCHES_FILTER],
+    exact: true,
+    strict: true,
+  })?.params;
+
+  const publicUid = (params as PublicViewParam)?.publicUid || "";
+  const showOnly = (params as MatchesParams)?.showOnly || "";
 
   // default view
   const [route, setRoute] = useState<string>(location?.pathname);

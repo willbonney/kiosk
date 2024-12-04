@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://willbonney.github.io/kiosk",
   "dependencies": {
+    "@craco/craco": "^7.1.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
@@ -20,6 +21,7 @@
     "firebase": "^7.15.4",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.15",
+    "path-browserify": "^1.0.1",
     "react": "^16.13.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.13.1",
@@ -30,24 +32,18 @@
     "typescript": "3.9.6"
   },
   "devDependencies": {
-    "dotenv": "^8.2.0",
-    "eslint": "^6.6.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "dotenv": "^8.6.0",
     "gh-pages": "^6.2.0",
     "prettier": "^2.0.5"
   },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "PUBLIC_URL=/kiosk craco start",
+    "build": "PUBLIC_URL=/kiosk craco build",
+    "test": "craco test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
