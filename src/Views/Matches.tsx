@@ -20,7 +20,6 @@ import { media } from "../Constants/media";
 import isEmpty from "lodash/isEmpty";
 import { useParams } from "react-router-dom";
 import { MatchesParams } from "../Types/shared";
-import { Media } from "../Types/shared";
 
 type MediaMatch = {
   id: string;
@@ -69,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Matches: React.FC = (props) => {
+const Matches: React.FC = () => {
   const classes = useStyles();
   const user: User = useSession();
   const params = useParams<MatchesParams>();
@@ -101,7 +100,9 @@ const Matches: React.FC = (props) => {
                 });
               });
           })
-        );
+        ).catch((error) => {
+          console.log("getSetUsersThatHaveSelected error", error);
+        });
       };
       getSetUsersThatHaveSelected();
     }

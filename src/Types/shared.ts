@@ -52,6 +52,7 @@ export type OMDBParsedData = {
   type: string;
   rating: number;
 };
+
 export type GoogleBooksParsedData = {
   id: string;
   isbn13?: string;
@@ -61,6 +62,7 @@ export type GoogleBooksParsedData = {
   type: string;
   rating: number;
 };
+
 export type IGDBParsedData = {
   id: number;
   title: string;

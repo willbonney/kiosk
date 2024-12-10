@@ -24,6 +24,7 @@ yarn-error.log*
 
 # user defined
 /functions/node_modules
+/functions/firebase-debug.log
 /functions/service_account_key.json
 .env
 .env.development

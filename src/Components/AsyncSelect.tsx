@@ -7,7 +7,7 @@ import { Theme, useTheme } from "@material-ui/core/styles";
 import AsyncSelect from "react-select/async";
 import { FIREBASE_PROXY_URL } from "../Constants/api";
 import HighlightOffOutlinedIcon from "@material-ui/icons/HighlightOffOutlined";
-import { Media } from "../Types/shared";
+import { IGDBParsedData, GoogleBooksParsedData, Media, OMDBParsedData, ParsedData } from "../Types/shared";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Rating from "@material-ui/lab/Rating";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -32,12 +32,13 @@ import {
   StyledSubtitle,
   StyledRatingSourceIconWrapper,
 } from "./AsyncSelectStyles";
+import { GoogleBooksArr, IGDBGameArr, OMDBMovieArr } from "../Types/ApiResponses";
 
 type AdditionalAsyncSelectProps = {
   publicUserId?: string;
   loading: boolean;
 };
-type AsyncSelectProps = Media & AdditionalAsyncSelectProps;
+type AsyncSelectProps = Media<OMDBMovieArr | GoogleBooksArr | IGDBGameArr, OMDBParsedData | GoogleBooksParsedData | IGDBParsedData> & AdditionalAsyncSelectProps;
 
 const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
   (props: AsyncSelectProps) => {
@@ -69,9 +70,9 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
     const { selections = {}, metadata = {} }: FirestoreContext = useContext(
       SelectionContext
     );
-    const selected = selections![firestoreKey] || {};
+    const selected = selections[firestoreKey as keyof typeof selections] || {};
 
-    const updateMatchesInDb = async (optionCopy) => {
+    const updateMatchesInDb = async (optionCopy: {id?: string; value?: {title?: string}}) => {
       try {
         const mediaCollection = await firestore.collection("media");
         const matchFields = mediaCollection.doc(optionCopy?.id);
@@ -100,7 +101,7 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
       }
     };
 
-    const handleOnChange = async (selectedOption) => {
+    const handleChange = async (selectedOption: ParsedData<OMDBParsedData | GoogleBooksParsedData | IGDBParsedData>) => {
       const optionCopy = Object.assign({}, selectedOption, {
         id: `${firestoreKey}-${selectedOption?.value?.id}`,
       });
@@ -115,7 +116,7 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
             // for IGDB we need to fetch cover art in a seperate request
             const additionalResponse = await augmentWithAdditionalRequest({
               customUrl: additionalRequestUrl,
-              customBody: `where id = ${optionCopy?.value[matchFieldName]}; fields *;`,
+              customBody: `where id = ${optionCopy?.value?.[matchFieldName as keyof typeof optionCopy.value]}; fields *;`,
             });
             const lowResImageUrl = additionalResponse[0].url;
             const highResImageUrl = lowResImageUrl.replace(
@@ -123,19 +124,24 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
               "t_original"
             );
             const imageUrl = `https:${highResImageUrl}`;
-            optionCopy.value.image = imageUrl;
+            if (optionCopy.value && 'image' in optionCopy.value) {
+              optionCopy.value.image = imageUrl;
+            }
           }
           if ([MOVIE, TV_SHOW].includes(firestoreKey)) {
             // for OMDB we need to fetch rating in a seperate request
             const additionalResponse = await augmentWithAdditionalRequest({
-              customUrl: `${additionalRequestUrl}&i=${optionCopy?.value[matchFieldName]}`,
+              customUrl: `${additionalRequestUrl}&i=${optionCopy?.value?.[matchFieldName as keyof typeof optionCopy.value]}`,
             });
             // IMDB ratings are out of 10
             const normalizedRating = round(
               parseFloat(additionalResponse?.imdbRating) / 2,
               1
             );
-            optionCopy.value.rating = normalizedRating;
+
+            if (optionCopy.value) {
+              optionCopy.value.rating = normalizedRating;
+            }
           }
         }
         // grab user document
@@ -147,11 +153,11 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
 
         return updateMatchesInDb(optionCopy);
       } catch (error) {
-        console.log("handleOnChange error", error);
+        console.log("handleChange error", error);
       }
     };
 
-    const handleOnFocus = (_) => console.log("onFocus"); // for later use
+    const handleFocus = () => console.log("onFocus"); // for later use
 
     const handleLoadOptions = (inputValue: string, callback) => {
       if (!inputValue) return callback([]);
@@ -227,14 +233,14 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
       }
     };
 
-    const getImage = (): ReactElement => {
+    const renderImage = (): ReactElement => {
       const { value: { image = "" } = {} } = selected;
       if (!isEmpty(selected))
         return <img className="media-cover" alt="media-cover" src={image} />;
       return <></>;
     };
 
-    const getDecription = (): ReactElement => {
+    const renderDescription = (): ReactElement => {
       const {
         value: { title = "", subtitle = "", id = "", rating = null } = {},
       } = selected;
@@ -372,8 +378,8 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
                 </StyledExternalLinkIconContainer>
               )}
             </StyledActionIconsContainer>
-            {getImage()}
-            {getDecription()}
+            {renderImage()}
+            {renderDescription()}
             {isEmpty(selected) && !publicUserId && (
               <StyledAsyncSelectWrapper>
                 <AsyncSelect
@@ -384,11 +390,11 @@ const AsyncSelectProps: React.FC<AsyncSelectProps> = memo(
                   })}
                   defaultOptions={true}
                   placeholder="Start typing to search..."
-                  onChange={handleOnChange}
+                  onChange={handleChange}
                   isClearable
                   loadingMessage={() => <StyledLoader />}
                   noOptionsMessage={() => "No search results"}
-                  onFocus={handleOnFocus}
+                  onFocus={handleFocus}
                 />
               </StyledAsyncSelectWrapper>
             )}

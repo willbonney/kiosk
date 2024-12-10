@@ -26,6 +26,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
 import { useTheme, Theme } from "@material-ui/core/styles";
+import { FirebaseError } from "firebase";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignupOrLogin = (props) => {
+const SignupOrLogin = () => {
   const firebaseAuth = firebase.auth();
 
   const classes = useStyles();
@@ -99,18 +100,18 @@ const SignupOrLogin = (props) => {
         .collection("users")
         .doc(user.uid);
       const unsubscribe = userDocRef.onSnapshot({
-        next: (snapshot) => {
+        next: () => {
           unsubscribe();
         },
-        error: (error) => {
+        error: (error: FirebaseError) => {
           console.log(error);
           setAuthError(error.message);
           unsubscribe();
         },
       });
       history.push(ACTIVITY);
-    } catch (error) {
-      setAuthError(error.message);
+    } catch (error: unknown) {
+      setAuthError((error as FirebaseError).message);
       console.error("handleSignup error", error);
     }
   };
@@ -124,10 +125,9 @@ const SignupOrLogin = (props) => {
         email,
         password
       );
-      const { additionalUserInfo, credential, operationType, user } = res;
       res.user && history.push(ACTIVITY);
-    } catch (error) {
-      setAuthError(error.message);
+    } catch (error: unknown) {
+      setAuthError((error as FirebaseError).message);
       console.error("handleLogin error", error);
     }
   };
@@ -170,9 +170,9 @@ const SignupOrLogin = (props) => {
                   (click to prefill form)
                 </Typography>
                 <List component="nav" aria-label="main mailbox folders">
-                  {SAMPLE_LOGINS.map((l, i) => (
+                  {SAMPLE_LOGINS.map((l) => (
                     <ListItem
-                      key={i}
+                      key={l.email}
                       button
                       onClick={() => {
                         setEmail(l.email);
