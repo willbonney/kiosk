@@ -2,14 +2,14 @@ import React from "react";
 import BottomNavigation from "../Components/BottomNavigation";
 import TopNavigation from "../Components/TopNavigation";
 import styled from "styled-components";
-import { createMuiTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
 
 const StyledLayoutWrapper = styled.div`
   margin-top: 130px;
 `;
 
 // https://paletton.com/#uid=3360u0kcvfm7JpEaLkAhQcem+9S
-const theme: Theme = createMuiTheme({
+const theme: Theme = createTheme({
   palette: {
     primary: {
       main: "#325247",

@@ -14,9 +14,11 @@ import { SelectionContext } from "../Helpers/CustomHooks";
 import { useHistory, RouteComponentProps } from "react-router-dom";
 import { Typography, Grid } from "@material-ui/core";
 import { Share } from "@material-ui/icons";
-import { Media } from "../Types/shared";
+import { GoogleBooksParsedData, IGDBParsedData, Media, OMDBParsedData } from "../Types/shared";
 import firebase from "../FirebaseConfig";
 import isEmpty from "lodash/isEmpty";
+import { GoogleBooksArr, OMDBMovieArr } from "../Types/ApiResponses";
+import { IGDBGameArr } from "../Types/ApiResponses";
 
 type PublicUser = {
   email: string;
@@ -153,8 +155,8 @@ const Activity: React.FC<RouteComponentProps<MatchParams>> = memo(
           </>
         )}
         <Grid container justifyContent="space-evenly">
-          {media.map((m: Media, i: number) => (
-            <Grid key={i} item xs={6} style={{ position: "relative" }}>
+          {media.map((m: Media<OMDBMovieArr, OMDBParsedData> | Media<GoogleBooksArr, GoogleBooksParsedData> | Media<IGDBGameArr, IGDBParsedData>) => (
+            <Grid key={m.label} item xs={6} style={{ position: "relative" }}>
               <AsyncSelect
                 loading={loading}
                 publicUserId={publicUserId}
