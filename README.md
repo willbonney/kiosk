@@ -1,9 +1,5 @@
 ## Kiosk
 
-<p align="center">
-A live version of this project can be found <a target="blank" rel="noopener noreferrer" href="majora-563d6.web.app">here</a>.
-</p>
-
 ### `Architecture`
 
 <img src="kiosk.png" alt="Kiosk"
