@@ -1,5 +1,7 @@
 ## Kiosk
 
+_**LLM usage:** 0%_
+
 ### `Architecture`
 
 <img src="kiosk.png" alt="Kiosk"
